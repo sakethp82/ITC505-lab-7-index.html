@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mad Lib Adventure</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #7f7fd5, #86a8e7, #91eae4);
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 40px;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 30px;
+      margin-top: 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      width: 90%;
+      max-width: 500px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #7f7fd5;
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 14px;
+      background-color: #7f7fd5;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5d5da9;
+    }
+
+    #madLibResult {
+      display: none; /* Hidden by default */
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    #error-message {
+      color: red;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: white;
+      font-size: 14px;
+      padding-bottom: 20px;
+    }
+
+    img {
+      margin-top: 20px;
+      width: 180px;
+    }
+
+    #addendumSection {
+      display: none;
+      background-color: #ffffff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      color: #333;
+    }
+
+    #addendumButton {
+      width: auto;
+      padding: 8px 16px;
+      font-size: 14px;
+      background-color: #7f7fd5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #addendumButton:hover {
+      background-color: #5d5da9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Mad Lib Adventure</h1>
+  <img src="https://www.looneylabs.com/sites/default/files/marketing_images/MadLibsTheGameLogo.png" alt="Mad Lib Game Logo" />
+
+  <form id="madLibForm">
+    <label for="verb">What’s an action verb? (like dance):</label>
+    <input type="text" id="verb" required>
+
+    <label for="adverb">What’s an adverb? (like quickly):</label>
+    <input type="text" id="adverb" required>
+
+    <label for="adjective">What’s an adjective? (like bouncy):</label>
+    <input type="text" id="adjective" required>
+
+    <label for="noun">What’s a funny object? (like donut):</label>
+    <input type="text" id="noun" required>
+
+    <label for="pronoun">What’s a pronoun? (like he, she, they):</label>
+    <input type="text" id="pronoun" required>
+
+    <label for="interjection">What’s a fun interjection? (like Wow):</label>
+    <input type="text" id="interjection" required>
+
+    <div id="error-message"></div>
+    <button type="button" onclick="generateMadLib()">Tell My Story!</button>
+  </form>
+
+  <div id="madLibResult"></div>
+
+  <!-- Addendum Button and Addendum Section -->
+  <button id="addendumButton" type="button" onclick="toggleAddendum()">Show Addendum</button>
+  <div id="addendumSection">
+    <h2>About This Web Page</h2>
+    <p>This webpage is a fun Mad Libs adventure game! It allows you to fill in various parts of speech such as verbs, adverbs, adjectives, nouns, pronouns, and interjections to create a humorous and random story. Here's what you can do:</p>
+    <ul>
+      <li><strong>Verb</strong>: Enter an action word (e.g., run, jump, dance).</li>
+      <li><strong>Adverb</strong>: Enter a word that describes how something is done (e.g., quickly, slowly, loudly).</li>
+      <li><strong>Adjective</strong>: Describe something (e.g., bouncy, red, silly).</li>
+      <li><strong>Noun</strong>: Enter an object (e.g., donut, car, dog).</li>
+      <li><strong>Pronoun</strong>: Enter a pronoun (e.g., he, she, they).</li>
+      <li><strong>Interjection</strong>: exclamation (e.g., Wow, Oops, Yay).</li>
+    </ul>
+    <p>Once you've filled in the fields and hit "Tell My Story!", you'll get a personalized Mad Lib story that combines your choices in a fun and unexpected way!</p>
+  </div>
+
+  <footer>
+    <p>Last updated: <span id="lastModified"></span></p>
+  </footer>
+
+  <script>
+    // Display last modified date
+    document.getElementById('lastModified').textContent = document.lastModified;
+
+    // Generate Mad Lib story
+    function generateMadLib() {
+      const verb = document.getElementById('verb').value.trim();
+      const adverb = document.getElementById('adverb').value.trim();
+      const adjective = document.getElementById('adjective').value.trim();
+      const noun = document.getElementById('noun').value.trim();
+      const pronoun = document.getElementById('pronoun').value.trim();
+      const interjection = document.getElementById('interjection').value.trim();
+      const errorMessage = document.getElementById('error-message');
+
+      if (!verb || !adverb || !adjective || !noun || !pronoun || !interjection) {
+        errorMessage.textContent = 'Oops! Please fill out all the fields to tell your story!';
+        return;
+      }
+
+      errorMessage.textContent = '';
+      const story = `${interjection}! One day, ${pronoun} decided to ${verb} very ${adverb}. They found a ${adjective} ${noun} along the way and couldn't stop laughing. What a crazy adventure!`;
+
+      const resultDiv = document.getElementById('madLibResult');
+      resultDiv.textContent = story;
+      resultDiv.style.display = 'block'; // Show the result
+    }
+
+    // Toggle visibility of the Addendum section
+    function toggleAddendum() {
+      const addendum = document.getElementById('addendumSection');
+      if (addendum.style.display === 'none' || addendum.style.display === '') {
+        addendum.style.display = 'block';
+      } else {
+        addendum.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
